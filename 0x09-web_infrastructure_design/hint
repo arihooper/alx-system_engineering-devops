@@ -1,0 +1,69 @@
+Task 0
+.Explain the role of each component:
+User's Computer: The computer of the user who wants to access the website.
+Internet: The network that connects the user's computer to the web server.
+Server: The physical or virtual machine that hosts the website's infrastructure.
+Nginx Web Server: The web server software that serves the website's static assets to the user's web browser.
+Application Server: The software that generates the website's dynamic content.
+MySQL Database: The database software that stores the website's data.
+Domain Name: The human-readable name that is used to access the website instead of the IP address.
+DNS Record: The DNS record that maps the domain name to the server's IP address.
+Explain the type of DNS record:
+The DNS record for the domain name (www.foobar.com) is an "A" record, which maps the domain name to an IP address.
+Explain the issues with this infrastructure:
+Single Point of Failure (SPOF): If the server goes down, the website will be unavailable until it is brought back up.
+Downtime during maintenance: If the web server needs to be restarted for maintenance or updates, 
+the website will be unavailable during that time.
+Cannot scale if too much incoming traffic: If the website receives too much incoming traffic, the server may become overwhelmed and unable to handle 
+all the requests, leading to slow load times or downtime.
+
+task1.
+Explanation:
+
+##We are adding a load balancer (HAproxy) to distribute incoming traffic between the web server and the application server. 
+This ensures that if one server goes down, the other servers can still handle requests, providing high availability and fault tolerance.
+
+##The load balancer is configured with a round-robin distribution algorithm, which distributes incoming requests evenly across the available servers. 
+This ensures that no single server is overwhelmed with traffic, and provides a more balanced load distribution.
+The load balancer is enabling an Active-Active setup, where all servers are active and can handle requests. 
+In contrast, an Active-Passive setup would have one primary server handling requests, with one or more secondary servers on standby in case the primary server fails.
+
+##The database is configured as a Primary-Replica (Master-Slave) cluster, where Server 3 is the primary node and Server 2 is the replica node. 
+The primary node is responsible for handling all write operations, while the replica node is responsible for handling read operations. 
+This ensures that the application can handle a high volume of read requests, while also providing a backup in case the primary node fails.
+The primary node and the replica node have different roles in regard to the application. The primary node is responsible for handling all write operations, while the replica node is responsible for handling read operations.
+ This ensures that the application can handle a high volume of read requests, while also providing a backup in case the primary node fails.
+
+###Issues with this infrastructure:
+There are several potential issues with this infrastructure:
+1.Single Point of Failure (SPOF): There are still SPOFs in this infrastructure, such as the load balancer and the primary database node. 
+If either of these servers fail, it could cause the entire infrastructure to go down. 
+To mitigate this risk, we could add redundant load balancers and database nodes, and configure them in a high availability setup.
+2.Security issues: There are no firewalls or HTTPS encryption in this infrastructure, which could leave it vulnerable to attacks. 
+To address this issue, we could add a firewall to restrict access to the servers, and configure HTTPS encryption to secure communication between the servers and clients.
+3. No monitoring: There is no monitoring in place to track the performance and availability of the servers. 
+To address this issue, we could add monitoring tools to track metrics such as CPU usage, memory usage, and network traffic, and alert us if any issues arise.
+Task 2.
+Explanation:
+We are adding three firewalls to the infrastructure to provide an additional layer of security. Firewalls are used to control incoming and outgoing network traffic based on predetermined security rules. This helps to prevent unauthorized access to the servers and protect against cyber attacks.
+We are serving traffic over HTTPS to ensure that all communication between the client and the server is encrypted. This helps to protect sensitive data such as passwords, credit card information, and personal data from being intercepted by malicious actors.
+We are adding three monitoring clients to collect data for Sumologic or other monitoring services. Monitoring is used to track the performance and availability of the servers and applications. This helps to identify and resolve issues before they impact users.
+The monitoring tool collects data by installing a data collector client on each server. The data collector client collects metrics such as CPU usage, memory usage, and network traffic, and sends the data to the monitoring server for analysis.
+To monitor the QPS (queries per second) of the web server, you can use a monitoring tool that supports web server metrics. For example, you can use a tool like New Relic or AppDynamics to monitor the QPS of the Nginx web server.
+
+
+Issues with this infrastructure:
+There are several potential issues with this infrastructure:
+Terminating SSL at the load balancer level is an issue because it creates a single point of failure for SSL encryption. If the load balancer fails, the SSL encryption will no longer be in effect, leaving the servers vulnerable to attacks. To mitigate this risk, you can terminate SSL at the web server level instead.
+Having only one MySQL server capable of accepting writes is an issue because it creates a single point of failure for the database. If the MySQL server fails, the entire infrastructure will be unable to handle write operations. To mitigate this risk, you can add a secondary MySQL server and configure it as a replica of the primary server.
+Having servers with all the same components (database, web server, and application server) might be a problem because it creates a lack of redundancy and scalability. If one server fails, the entire infrastructure will be impacted. To mitigate this risk, you can separate the components onto different servers and add redundant servers for each component. This will provide higher availability and scalability, allowing the infrastructure to handle increased traffic and reduce the impact of server failures.
+
+Task 3
+Explanation:
+We are adding a second load balancer (Load Balancer 2) to the infrastructure to provide high availability and fault tolerance for the application server. By adding a second load balancer, we can distribute incoming traffic across multiple application servers, ensuring that if one server fails, the other servers can still handle requests.
+We are splitting the components (web server, application server, and database) onto separate servers to provide better scalability and maintainability. By separating the components, we can scale each component independently based on its specific needs. For example, if the web server is receiving high traffic, we can add more web servers to handle the load. Similarly, if the application server is experiencing high CPU usage, we can add more application servers to distribute the load.
+Load Balancer 1 and Load Balancer 2 are configured as a cluster to provide high availability and fault tolerance for the entire infrastructure. If one load balancer fails, the other load balancer can take over and continue distributing incoming traffic.
+By separating the components onto different servers, we can also improve maintainability. Each server can be managed independently, reducing the risk of downtime or errors caused by changes to other components.
+Overall, this infrastructure provides a highly available and scalable solution for hosting a web application with separate web, application, and database servers, as well as load balancers to distribute incoming traffic and ensure high availability.
+
+
